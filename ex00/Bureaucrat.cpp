@@ -1,0 +1,95 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Bureaucrat.cpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hcherpre <hcherpre@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/16 14:49:26 by hcherpre          #+#    #+#             */
+/*   Updated: 2022/11/16 18:24:32 by hcherpre         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "Bureaucrat.hpp"
+
+Bureaucrat::Bureaucrat()
+{
+}
+
+Bureaucrat::Bureaucrat(std::string name, int grade) : s_name(name)
+{
+    if (grade < 1)
+        throw Bureaucrat::GradeTooHighException();
+    else if (grade > 150)
+        throw Bureaucrat::GradeTooLowException();
+    s_grade = grade;
+}
+
+Bureaucrat::Bureaucrat(Bureaucrat const& cpy)
+{
+    *this = cpy;
+}
+
+Bureaucrat::~Bureaucrat()
+{
+}
+
+/***************************************************************************************/
+
+Bureaucrat& Bureaucrat::operator=(Bureaucrat const& cpy)
+{
+    if (this == &cpy)
+        return (*this);
+    s_name = cpy.s_name;
+    s_grade = cpy.s_grade;
+    return (*this);
+}
+
+std::ostream& operator<<(std::ostream& flux, Bureaucrat const& cpy)
+{
+    flux<<cpy.getName()<<" bureaucrat grade "<<cpy.getGrade()<<std::endl;
+    return (flux);
+}
+
+/***************************************************************************************/
+
+std::string	Bureaucrat::getName() const
+{
+    return (s_name);
+}
+
+int	Bureaucrat::getGrade() const
+{
+    return (s_grade);
+}
+
+void	Bureaucrat::increment()
+{
+    if ((s_grade - 1) < 1)
+    {
+        throw Bureaucrat::GradeTooHighException();
+    }
+	s_grade -= 1;
+}
+
+void	Bureaucrat::decrement()
+{
+
+    if ((s_grade + 1) > 150)
+    {
+        throw Bureaucrat::GradeTooLowException();
+    }
+	s_grade += 1;
+}
+
+/***************************************************************************************/
+
+const char*    Bureaucrat::GradeTooHighException::what() const throw()
+{
+    return ("Le grade est trop haut...");
+}
+
+const char*    Bureaucrat::GradeTooLowException::what() const throw()
+{
+    return ("Le grade est trop bas...");
+}
